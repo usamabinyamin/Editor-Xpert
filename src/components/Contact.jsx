@@ -49,8 +49,8 @@ export default function Contact() {
             <div className="group mb-6 overflow-hidden rounded-2xl border border-violet-100/90 bg-white/95 shadow-md shadow-violet-200/15">
               <img
                 src={MEDIA.contact}
-                alt="Video editing studio setup for YouTube automation"
-                className="h-44 w-full object-cover transition duration-500 group-hover:scale-105"
+                alt="YouTube, TikTok, X, and Facebook social platform logos"
+                className="h-44 w-full object-cover object-center transition duration-500 group-hover:scale-105"
                 loading="lazy"
               />
               <div className="border-t border-violet-100/80 bg-canvas-bright/80 px-4 py-3 text-sm font-medium text-slate-700">

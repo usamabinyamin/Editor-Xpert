@@ -17,7 +17,7 @@ export default function ServicesPage() {
       <Navbar />
 
       <motion.main
-        className="relative w-full flex-1 pt-24 sm:pt-26 lg:pt-28"
+        className="relative w-full flex-1 pt-[4.25rem] sm:pt-[4.5rem]"
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}

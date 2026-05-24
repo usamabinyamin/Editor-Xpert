@@ -1,463 +1,476 @@
-import { motion } from 'framer-motion'
-import { HiArrowRight, HiChartBar, HiLightBulb, HiTrendingUp } from 'react-icons/hi'
-import {
-  FaYoutube,
-  FaSearch,
-  FaPenFancy,
-  FaMicrophone,
-  FaCut,
-  FaImage,
-  FaClipboardList,
-  FaTags,
-  FaChartLine,
-  FaShieldAlt,
-  FaCloudUploadAlt,
-  FaPalette,
-  FaShareAlt,
-  FaFilm,
-} from 'react-icons/fa'
+import { useState } from 'react'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
+import { HiArrowRight, HiCheck, HiChevronDown } from 'react-icons/hi'
+import { FaYoutube } from 'react-icons/fa'
 import SectionHeading from './SectionHeading'
-import { easeSmooth } from './MotionSection'
-import { SERVICES_HERO_IMAGE, SERVICE_IMAGES } from '../data/media'
+import { easeSmooth, Floaty, staggerContainer, staggerItem, staggerItemSoft } from './MotionSection'
+import { SERVICES_HERO_IMAGE, SERVICES_DASHBOARD_IMAGE } from '../data/media'
+import { SERVICES_PAGE as P } from '../data/servicesPage'
 
-const ease = [0.22, 1, 0.36, 1]
+const ease = easeSmooth
 
-/** Full-stack YouTube automation stack (topics aligned with professional automation offerings). */
-const services = [
-  {
-    title: 'YouTube automation',
-    desc: 'Own a faceless or brand channel while we run research, planning, production rhythm, and publishing—so you scale a digital asset without being on camera daily.',
-    icon: FaYoutube,
-  },
-  {
-    title: 'Profitable niche & keyword research',
-    desc: 'Data-led niche selection and keyword strategy aimed at strong CPM potential, sensible competition, and topics that support long-term growth and monetization.',
-    icon: FaSearch,
-  },
-  {
-    title: 'Strategic script writing',
-    desc: 'Hook-first, retention-aware scripts with SEO-aware phrasing so each video is built to hold attention and earn reach from the algorithm.',
-    icon: FaPenFancy,
-  },
-  {
-    title: 'Voiceover production',
-    desc: 'Professional human or natural AI-style voiceover options with clear delivery that matches your channel tone and production level.',
-    icon: FaMicrophone,
-  },
-  {
-    title: 'High-end video editing',
-    desc: 'Fast-paced cuts, motion graphics, b-roll, and storytelling polish—edited for watch time so the feed treats your uploads as high-signal content.',
-    icon: FaCut,
-  },
-  {
-    title: 'Viral thumbnail design',
-    desc: 'High-contrast, scroll-stopping thumbnails using layout and contrast principles that support stronger CTR in crowded search and browse surfaces.',
-    icon: FaImage,
-  },
-  {
-    title: 'Channel management & scheduling',
-    desc: 'Upload logistics, community touchpoints, and a consistent release cadence so your channel stays active and professional without you micromanaging.',
-    icon: FaClipboardList,
-  },
-  {
-    title: 'YouTube SEO & metadata',
-    desc: 'Titles, descriptions, tags, and packaging aligned to intent and discovery—structured to support impressions, clicks, and sustained sessions.',
-    icon: FaTags,
-  },
-  {
-    title: 'Monetization & growth strategy',
-    desc: 'Roadmaps toward monetization eligibility plus ongoing performance thinking so the goal is durable revenue, not one-off viral spikes.',
-    icon: FaChartLine,
-  },
-  {
-    title: 'Copyright-safe production',
-    desc: 'Licensed or royalty-free music, cleared stock, and original scripts—built so your catalog stays policy-safe and monetization-ready.',
-    icon: FaShieldAlt,
-  },
-  {
-    title: 'Publishing & optimization',
-    desc: 'Hands-on publishing support: timing, metadata checks, and iteration loops so every upload lands with your strategy intact.',
-    icon: FaCloudUploadAlt,
-  },
-  {
-    title: 'Graphic design & brand visuals',
-    desc: 'Channel art, end screens, lower thirds, and campaign creatives that keep your automation output visually cohesive at scale.',
-    icon: FaPalette,
-  },
-  {
-    title: 'Social clips & cross-platform',
-    desc: 'Shorts, reels, and cut-downs that repurpose long-form into platform-native formats and extend reach beyond the main channel.',
-    icon: FaShareAlt,
-  },
-  {
-    title: 'Documentary & long-form',
-    desc: 'Premium long-form and documentary-style edits when your automation lane needs deeper narrative structure and cinematic pacing.',
-    icon: FaFilm,
-  },
-]
+const heroStagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.06 } },
+}
 
-const whyChoose = [
-  {
-    title: 'Data-driven growth',
-    desc: 'Keyword strategy, retention thinking, and packaging decisions informed by what the YouTube algorithm rewards—not guesswork.',
-    icon: HiChartBar,
-  },
-  {
-    title: 'Built for faceless & brand channels',
-    desc: 'Repeatable content systems, strong hooks, and production volume so you can scale output like a media company—not a solo editor.',
-    icon: HiLightBulb,
-  },
-  {
-    title: 'End-to-end partnership',
-    desc: 'From niche clarity to uploads and monetization planning—we handle the heavy lifting so your time goes to strategy and ownership.',
-    icon: HiTrendingUp,
-  },
-]
+const heroItem = {
+  hidden: { opacity: 0, y: 18 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.52, ease } },
+}
 
-const processSteps = [
-  {
-    step: '01',
-    title: 'Niche research & channel strategy',
-    desc: 'High-CPM, lower-competition angles and a clear positioning plan based on demand, trends, and long-term revenue potential.',
-    image:
-      'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    step: '02',
-    title: 'Content planning & script creation',
-    desc: 'Topic pipelines and engaging, SEO-aware scripts designed to lift watch time, retention, and discovery.',
-    image:
-      'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    step: '03',
-    title: 'Voiceover & video editing',
-    desc: 'Human-like voiceover plus polished editing, stock, transitions, and motion—built for clarity and retention.',
-    image:
-      'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    step: '04',
-    title: 'Thumbnail design & YouTube SEO',
-    desc: 'Click-optimized thumbnails and metadata that improve CTR, search visibility, and suggested traffic.',
-    image:
-      'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    step: '05',
-    title: 'Uploading, monetization & scaling',
-    desc: 'Scheduling, performance reviews, and iteration so the channel compounds into a sustainable asset.',
-    image:
-      'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80',
-  },
-]
+const visualStagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
+}
 
-const industries = [
-  'Course editing',
-  'Ad creatives',
-  'Travel',
-  'Real estate',
-  'Business & finance',
-  'Tech & AI',
-  'Travel & tourism',
-  'True crime & mystery',
-  'Crypto',
-  'Documentary',
-]
+const visualItem = {
+  hidden: { opacity: 0, y: 16, scale: 0.96 },
+  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.55, ease } },
+}
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 24 },
-  show: (i) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.04, duration: 0.45, ease },
-  }),
+function ServicesFaq() {
+  const [open, setOpen] = useState(0)
+
+  return (
+    <section className="relative border-t border-violet-200/35 bg-gradient-to-b from-band/40 via-canvas to-fuchsia-50/25 py-20 sm:py-24">
+      <motion.div className="layout-shell">
+        <SectionHeading eyebrow={P.faq.eyebrow} title={P.faq.title} />
+
+        <motion.div
+          className="mx-auto max-w-3xl space-y-3"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: '-40px' }}
+        >
+          {P.faq.items.map((item, i) => {
+            const isOpen = open === i
+            return (
+              <motion.div
+                key={item.q}
+                variants={staggerItem}
+                initial={false}
+                whileHover={{ y: -2 }}
+                className="overflow-hidden rounded-xl border border-violet-100/90 bg-white/95 shadow-md shadow-violet-200/15 transition-shadow hover:shadow-lg"
+              >
+                <button
+                  type="button"
+                  onClick={() => setOpen(isOpen ? -1 : i)}
+                  className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
+                  aria-expanded={isOpen}
+                >
+                  <span className="font-display text-base font-semibold text-slate-900 sm:text-lg">{item.q}</span>
+                  <motion.span animate={{ rotate: isOpen ? 180 : 0 }} className="shrink-0 text-violet">
+                    <HiChevronDown className="h-5 w-5" />
+                  </motion.span>
+                </button>
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.25 }}
+                    >
+                      <p className="border-t border-violet-100/80 px-5 pb-4 pt-3 text-sm leading-relaxed text-slate-600 sm:text-base">
+                        {item.a}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            )
+          })}
+        </motion.div>
+      </motion.div>
+    </section>
+  )
 }
 
 export default function Services() {
+  const reduce = useReducedMotion()
+
   return (
     <>
       {/* Hero */}
       <section
-        className="relative overflow-hidden border-b border-violet-200/40 bg-gradient-to-b from-canvas-bright via-white/40 to-violet-100/30 pb-16 pt-28 sm:pb-20 sm:pt-32 lg:pt-36"
+        className="relative overflow-hidden border-b border-violet-200/40 bg-transparent pb-16 pt-8 sm:pb-20 sm:pt-10 lg:pb-24"
         aria-labelledby="services-hero-heading"
       >
-        <div
+        <motion.div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_90%_60%_at_70%_-10%,rgba(144,137,252,0.18),transparent_55%)]"
+          animate={reduce ? {} : { opacity: [0.85, 1, 0.85] }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(230,1,28,0.06),transparent_50%)]"
         />
-        <div
+        <motion.div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_0%_100%,rgba(230,1,28,0.06),transparent_50%)]"
+          animate={reduce ? {} : { opacity: [0.9, 1, 0.9] }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_90%_60%_at_70%_-10%,rgba(144,137,252,0.14),transparent_55%)]"
         />
 
-        <div className="layout-shell relative">
-          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, ease }}
-            >
-              <span className="inline-flex items-center gap-2 rounded-full border border-violet-200/80 bg-white/90 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-slate-600 shadow-sm shadow-violet-200/20">
-                <span className="h-2 w-2 rounded-full bg-brand" aria-hidden />
-                YouTube automation
-              </span>
-              <h1
-                id="services-hero-heading"
-                className="mt-5 scroll-mt-28 font-display text-4xl font-bold leading-[1.1] tracking-tight text-slate-900 sm:text-5xl lg:text-[3.25rem]"
+        <motion.div className="layout-shell relative">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14 xl:gap-20">
+            <motion.div variants={heroStagger} initial="hidden" animate="show">
+              <motion.span
+                variants={heroItem}
+                className="text-xs font-bold uppercase tracking-[0.22em] text-brand sm:text-sm"
               >
-                Professional YouTube automation —{' '}
-                <span className="bg-gradient-to-r from-brand to-violet bg-clip-text text-transparent">
-                  end-to-end channel growth
-                </span>
-              </h1>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-slate-600 sm:text-xl">
-                Build a high-yielding digital asset with workflows that cover niche research, scripts, voiceover, editing,
-                thumbnails, SEO, publishing, and monetization strategy—without you living in the timeline every day.
-              </p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+                {P.hero.eyebrow}
+              </motion.span>
+              <motion.h1
+                variants={heroItem}
+                id="services-hero-heading"
+                className="mt-4 scroll-mt-28 font-display text-[2.35rem] font-bold leading-[1.08] tracking-tight text-slate-900 sm:text-5xl lg:text-[3.35rem]"
+              >
+                {P.hero.title.before}
+                <span className="text-brand">{P.hero.title.highlight}</span>
+                {P.hero.title.after}
+              </motion.h1>
+              <motion.p variants={heroItem} className="mt-5 max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg">
+                {P.hero.subtitle}
+              </motion.p>
+
+              <motion.div variants={heroItem} className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <motion.a
                   href="/#contact"
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.04, boxShadow: '0 12px 32px -8px rgba(230,1,28,0.35)' }}
                   whileTap={{ scale: 0.98 }}
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-brand to-brand-bright px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand/25 ring-1 ring-black/5"
+                  className="inline-flex items-center justify-center rounded-full bg-brand px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand/20 transition hover:bg-brand-dark"
                 >
-                  Free consultation
-                  <HiArrowRight className="h-5 w-5" />
+                  Free Consultation
                 </motion.a>
-                <a
-                  href="#service-deliverables"
-                  className="text-center text-sm font-semibold text-violet transition hover:text-brand-dark sm:text-left"
+                <motion.a
+                  href="/pricing-plan"
+                  whileHover={{ scale: 1.03, backgroundColor: 'rgba(230,1,28,0.06)' }}
+                  whileTap={{ scale: 0.98 }}
+                  className="inline-flex items-center justify-center rounded-full border-2 border-brand bg-transparent px-7 py-3.5 text-base font-semibold text-brand transition"
                 >
-                  Explore deliverables ↓
-                </a>
-              </div>
+                  See Pricing Plan
+                </motion.a>
+              </motion.div>
+
+              <motion.ul
+                variants={heroStagger}
+                initial="hidden"
+                animate="show"
+                className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6 sm:gap-y-2"
+              >
+                {P.hero.bullets.map((b) => (
+                  <motion.li
+                    key={b}
+                    variants={heroItem}
+                    className="flex items-center gap-2 text-sm font-medium text-slate-800 sm:text-[15px]"
+                  >
+                    <motion.span
+                      className="text-brand"
+                      aria-hidden
+                      animate={reduce ? {} : { scale: [1, 1.2, 1] }}
+                      transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+                    >
+                      ●
+                    </motion.span>
+                    {b}
+                  </motion.li>
+                ))}
+              </motion.ul>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.08, ease }}
-              className="relative mx-auto w-full max-w-lg lg:max-w-none"
+              initial={{ opacity: 0, x: 24 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.65, delay: 0.12, ease }}
+              className="relative mx-auto w-full max-w-[520px] lg:max-w-none lg:justify-self-end"
             >
-              <div className="absolute -inset-4 rounded-[2rem] bg-gradient-to-tr from-brand/20 via-violet/15 to-fuchsia-200/30 blur-2xl" />
-              <div className="relative overflow-hidden rounded-3xl border border-violet-200/80 bg-white shadow-2xl shadow-violet-300/30 ring-1 ring-white/80">
-                <img
-                  src={SERVICES_HERO_IMAGE}
-                  alt="Video production workspace with editing setup"
-                  className="aspect-[4/3] w-full object-cover sm:aspect-[16/11]"
-                  loading="eager"
-                  decoding="async"
-                />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-900/70 via-slate-900/20 to-transparent p-6 pt-20">
-                  <p className="font-display text-lg font-semibold text-white drop-shadow-sm">
-                    Custom workflows · Policy-safe assets · Publishing support
-                  </p>
-                </div>
-              </div>
+              <Floaty className="relative aspect-square w-full max-w-[520px] lg:ml-auto" y={8} duration={7}>
+                <motion.div variants={visualStagger} initial="hidden" animate="show" className="relative h-full w-full">
+                  <motion.div
+                    variants={visualItem}
+                    className="absolute inset-0 overflow-hidden rounded-[2rem] shadow-[0_28px_60px_-20px_rgba(18,20,29,0.55)] sm:rounded-[2.25rem]"
+                  >
+                    <img
+                      src={SERVICES_HERO_IMAGE}
+                      alt="3D YouTube play button icons representing professional YouTube automation services"
+                      className="h-full w-full object-cover object-center"
+                      loading="eager"
+                    />
+
+                    <motion.div
+                      variants={visualItem}
+                      className="absolute left-5 top-5 z-10 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/95 px-3.5 py-1.5 text-xs font-semibold text-slate-700 shadow-md sm:left-6 sm:top-6 sm:px-4 sm:py-2 sm:text-sm"
+                    >
+                      <motion.span
+                        className="h-2 w-2 rounded-full bg-brand"
+                        aria-hidden
+                        animate={reduce ? {} : { scale: [1, 1.35, 1], opacity: [1, 0.65, 1] }}
+                        transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+                      />
+                      {P.hero.visualBadge}
+                    </motion.div>
+                  </motion.div>
+
+                  <motion.div
+                    variants={visualItem}
+                    whileHover={{ y: -3, scale: 1.02 }}
+                    className="absolute -right-1 top-8 z-20 max-w-[min(78%,17rem)] rounded-2xl border border-violet-100/90 bg-white/95 p-3.5 shadow-lg shadow-violet-200/25 sm:-right-3 sm:top-10 sm:p-4"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#ff0000] text-white shadow-md sm:h-11 sm:w-11">
+                        <FaYoutube className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />
+                      </span>
+                      <motion.div className="min-w-0">
+                        <p className="font-display text-sm font-bold leading-tight text-slate-900 sm:text-base">
+                          {P.hero.visualTitle}
+                        </p>
+                        <p className="mt-0.5 text-xs text-slate-500 sm:text-sm">{P.hero.visualSubtitle}</p>
+                      </motion.div>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              </Floaty>
             </motion.div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
-      {/* Why choose */}
-      <section className="relative border-b border-violet-200/35 bg-gradient-to-b from-white/80 to-canvas-bright py-16 sm:py-20">
-        <div className="layout-shell">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.5, ease }}
-            className="mx-auto mb-12 max-w-3xl text-center"
-          >
-            <h2 className="bg-gradient-to-r from-slate-900 via-violet-950 to-slate-900 bg-clip-text font-display text-3xl font-bold tracking-tight text-transparent sm:text-4xl">
-              Why teams choose full-stack automation
-            </h2>
-            <p className="mt-4 text-lg text-slate-600">
-              The right partner is the difference between inconsistent uploads and a channel that compounds. We optimize for
-              retention, discovery, and monetization—not vanity metrics.
-            </p>
-          </motion.div>
 
-          <div className="grid gap-6 md:grid-cols-3">
-            {whyChoose.map((item, i) => (
+      {/* 9-service stack */}
+      <section id="services" className="scroll-mt-28 border-b border-violet-200/35 bg-gradient-to-b from-white/90 to-canvas-bright py-20 sm:py-24">
+        <motion.div className="layout-shell">
+          <SectionHeading eyebrow={P.stack.eyebrow} title={P.stack.title} subtitle={P.stack.subtitle} />
+
+          <motion.div
+            className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: '-40px' }}
+          >
+            {P.stack.items.map((item) => (
               <motion.article
-                key={item.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.15 }}
-                transition={{ delay: i * 0.08, duration: 0.45, ease }}
-                className="group relative overflow-hidden rounded-2xl border border-violet-100/90 bg-white/95 p-6 shadow-md shadow-violet-200/20 transition hover:border-brand/35 hover:shadow-lg"
+                key={item.step}
+                variants={staggerItem}
+                whileHover={{ y: -4 }}
+                className="rounded-2xl border border-violet-100/90 bg-white/95 p-6 shadow-md shadow-violet-200/15 transition hover:border-brand/30 hover:shadow-lg"
               >
-                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand/12 to-violet/15 text-brand ring-1 ring-violet-100">
-                  <item.icon className="h-6 w-6" aria-hidden />
-                </div>
-                <h3 className="font-display text-lg font-semibold text-slate-900">{item.title}</h3>
+                <span className="font-display text-sm font-bold text-brand">{item.step}</span>
+                <h3 className="mt-2 font-display text-lg font-semibold text-slate-900">{item.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">{item.desc}</p>
               </motion.article>
             ))}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
-      {/* Process */}
-      <section className="relative border-b border-violet-200/35 bg-gradient-to-b from-violet-100/25 via-canvas to-fuchsia-50/20 py-16 sm:py-20">
-        <div className="layout-shell">
+      {/* Industries */}
+      <section className="border-b border-violet-200/35 bg-gradient-to-b from-white via-orange-50/20 to-canvas-bright py-16 sm:py-20">
+        <motion.div className="layout-shell">
           <SectionHeading
-            eyebrow="Process"
-            title="Our YouTube automation pipeline"
-            subtitle="A result-driven flow built for quality, audience retention, and policy-safe scale."
+            eyebrow={P.industries.eyebrow}
+            title={P.industries.title}
+            subtitle={P.industries.subtitle}
           />
 
-          <div className="mt-4 space-y-8">
-            {processSteps.map((s, i) => (
+          <motion.div
+            className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5 lg:gap-4"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: '-40px' }}
+          >
+            {P.industries.items.map((item) => (
               <motion.div
-                key={s.step}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ delay: i * 0.06, duration: 0.5, ease: easeSmooth }}
-                className={`grid items-center gap-6 rounded-2xl border border-violet-100/90 bg-white/90 p-5 shadow-md shadow-violet-200/15 backdrop-blur-sm sm:p-6 lg:grid-cols-12 lg:gap-8 ${
-                  i % 2 === 1 ? 'lg:flex-row-reverse' : ''
-                }`}
+                key={item.label}
+                variants={staggerItem}
+                whileHover={{ y: -4, boxShadow: '0 12px 28px -10px rgba(15,23,42,0.14)' }}
+                className="flex min-h-[7.5rem] flex-col items-center justify-center rounded-xl border border-slate-100/90 bg-white px-3 py-5 text-center shadow-[0_4px_18px_-8px_rgba(15,23,42,0.12)] transition-shadow sm:min-h-[8.25rem] sm:rounded-2xl sm:px-4 sm:py-6"
               >
-                <div className={`lg:col-span-5 ${i % 2 === 1 ? 'lg:order-2' : ''}`}>
-                  <div className="overflow-hidden rounded-xl border border-violet-100/80 shadow-inner">
-                    <img
-                      src={s.image}
-                      alt=""
-                      className="aspect-[16/10] w-full object-cover transition duration-500 hover:scale-[1.02]"
-                      loading="lazy"
-                    />
-                  </div>
-                </div>
-                <div className={`lg:col-span-7 ${i % 2 === 1 ? 'lg:order-1' : ''}`}>
-                  <span className="font-display text-sm font-bold text-brand">{s.step}</span>
-                  <h3 className="mt-1 font-display text-xl font-semibold text-slate-900 sm:text-2xl">{s.title}</h3>
-                  <p className="mt-3 text-base leading-relaxed text-slate-600">{s.desc}</p>
-                </div>
+                <span className="text-[1.75rem] leading-none sm:text-3xl" aria-hidden>
+                  {item.emoji}
+                </span>
+                <p className="mt-3 font-display text-sm font-semibold leading-snug text-slate-900 sm:text-[15px]">
+                  {item.label}
+                </p>
               </motion.div>
             ))}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
-      {/* Industries + service grid */}
-      <section
-        id="services"
-        className="relative scroll-mt-28 border-t border-violet-200/30 bg-gradient-to-b from-canvas-bright/90 via-violet-50/30 to-canvas py-20 sm:py-24"
-      >
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/35 to-transparent" />
+      {/* Why choose + dashboard */}
+      <section className="border-b border-violet-200/35 bg-gradient-to-b from-white/80 to-canvas-bright py-20 sm:py-24">
+        <motion.div className="layout-shell">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.55, ease: easeSmooth }}
+              whileHover={{ y: -4 }}
+              className="overflow-hidden rounded-2xl border border-violet-100/90 bg-white shadow-xl shadow-violet-200/20"
+            >
+              <motion.img
+                src={SERVICES_DASHBOARD_IMAGE}
+                alt="Channel performance dashboard with growth charts and analytics"
+                className="aspect-[16/10] w-full object-cover object-[center_15%]"
+                loading="lazy"
+                whileHover={{ scale: 1.04 }}
+                transition={{ duration: 0.5, ease: easeSmooth }}
+              />
+              <div className="border-t border-violet-100/80 bg-slate-900 px-4 py-3">
+                <p className="text-sm font-medium text-white/90">Channel performance · growth analytics</p>
+              </div>
+            </motion.div>
 
-        <div className="layout-shell">
-          <div id="service-deliverables" className="scroll-mt-28">
-            <SectionHeading
-              eyebrow="Deliverables"
-              title="Everything we execute under YouTube automation"
-              subtitle="Modular services you can think of as your off-camera production and growth department."
-            />
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.5, ease }}
-            className="mx-auto mb-10 max-w-3xl text-center text-base leading-relaxed text-slate-600 sm:text-lg"
-          >
-            <p>
-              We deliver scalable{' '}
-              <span className="font-semibold text-slate-800">YouTube automation solutions</span> tailored to your niche—
-              custom content workflows, stronger channel authority, and packaging that supports search and suggested traffic.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{ duration: 0.45, delay: 0.05 }}
-            className="mb-14"
-          >
-            <p className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.2em] text-violet">Industries we serve</p>
-            <div className="flex flex-wrap justify-center gap-2">
-              {industries.map((label) => (
-                <span
-                  key={label}
-                  className="rounded-full border border-violet-200/70 bg-white/85 px-3.5 py-1.5 text-xs font-medium text-slate-700 shadow-sm shadow-violet-200/15 backdrop-blur-sm"
-                >
-                  {label}
-                </span>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.55, ease: easeSmooth }}
+            >
+              <span className="text-sm font-semibold uppercase tracking-[0.2em] text-violet">{P.whyChoose.eyebrow}</span>
+              <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+                {P.whyChoose.title}
+              </h2>
+              {P.whyChoose.paragraphs.map((p) => (
+                <p key={p.slice(0, 40)} className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg">
+                  {p}
+                </p>
               ))}
-            </div>
-          </motion.div>
 
-          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-            {services.map((s, i) => (
-              <motion.article
-                key={s.title}
-                custom={i}
-                variants={cardVariants}
+              <motion.ul
+                className="mt-6 space-y-3"
+                variants={staggerContainer}
                 initial="hidden"
                 whileInView="show"
-                viewport={{ once: true, margin: '-50px' }}
-                whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className="group relative flex flex-col overflow-hidden rounded-2xl border border-violet-100/90 bg-white/95 shadow-md shadow-violet-200/15 backdrop-blur-sm transition-colors hover:border-brand/40 hover:shadow-xl hover:shadow-brand/10"
+                viewport={{ once: true, margin: '-40px' }}
               >
-                <div className="relative h-40 overflow-hidden sm:h-44">
-                  <img
-                    src={SERVICE_IMAGES[i]}
-                    alt=""
-                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 via-transparent to-transparent opacity-80" />
-                  <div className="absolute bottom-3 left-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/95 text-brand shadow-md ring-1 ring-white/50 backdrop-blur-sm">
-                    <s.icon className="h-5 w-5" aria-hidden />
-                  </div>
-                </div>
-                <div className="flex flex-1 flex-col p-5 sm:p-6">
-                  <h3 className="font-display text-lg font-semibold text-slate-900">{s.title}</h3>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600">{s.desc}</p>
-                  <div className="mt-4 h-px w-full bg-gradient-to-r from-transparent via-violet-200/80 to-transparent" />
-                </div>
+                {P.whyChoose.bullets.map((b) => (
+                  <motion.li
+                    key={b}
+                    variants={staggerItemSoft}
+                    className="flex items-start gap-2.5 text-sm text-slate-700 sm:text-base"
+                  >
+                    <HiCheck className="mt-0.5 h-5 w-5 shrink-0 text-brand" aria-hidden />
+                    {b}
+                  </motion.li>
+                ))}
+              </motion.ul>
+
+              <motion.a
+                href="/#contact"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-brand to-brand-bright px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand/25"
+              >
+                {P.whyChoose.cta}
+                <HiArrowRight className="h-5 w-5" />
+              </motion.a>
+            </motion.div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* AI-powered stack */}
+      <section className="border-b border-violet-200/35 bg-gradient-to-b from-violet-100/20 via-canvas to-fuchsia-50/20 py-20 sm:py-24">
+        <motion.div className="layout-shell">
+          <SectionHeading eyebrow={P.aiStack.eyebrow} title={P.aiStack.title} subtitle={P.aiStack.subtitle} />
+
+          <motion.div
+            className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: '-40px' }}
+          >
+            {P.aiStack.items.map((item) => (
+              <motion.article
+                key={item.title}
+                variants={staggerItem}
+                whileHover={{ y: -4 }}
+                className="flex flex-col rounded-2xl border border-violet-100/90 bg-white/95 p-5 shadow-md shadow-violet-200/15 transition hover:border-brand/30 hover:shadow-lg sm:p-6"
+              >
+                <h3 className="font-display text-base font-semibold leading-snug text-slate-900">{item.title}</h3>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600">{item.desc}</p>
               </motion.article>
             ))}
-          </div>
+          </motion.div>
+        </motion.div>
+      </section>
 
-          {/* Bottom CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.25 }}
-            transition={{ duration: 0.5, ease }}
-            className="relative mx-auto mt-16 max-w-3xl overflow-hidden rounded-3xl border border-violet-200/90 bg-gradient-to-br from-white via-violet-50/50 to-fuchsia-50/40 p-8 text-center shadow-xl shadow-violet-200/30 sm:p-10"
-          >
+      {/* Promo CTA */}
+      <section className="border-b border-violet-200/35 bg-gradient-to-b from-canvas via-violet-50/30 to-canvas-bright py-16 sm:py-20">
+        <motion.div
+          className="layout-shell"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: easeSmooth }}
+        >
+          <div className="relative mx-auto max-w-3xl overflow-hidden rounded-3xl border border-violet-200/90 bg-gradient-to-br from-white via-violet-50/50 to-fuchsia-50/40 p-8 text-center shadow-xl shadow-violet-200/30 sm:p-12">
             <div
               aria-hidden
-              className="pointer-events-none absolute -right-20 top-0 h-40 w-40 rounded-full bg-brand/10 blur-3xl"
+              className="pointer-events-none absolute -right-16 top-0 h-36 w-36 rounded-full bg-brand/10 blur-3xl"
             />
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -left-16 bottom-0 h-36 w-36 rounded-full bg-violet/15 blur-3xl"
-            />
-            <h2 className="relative font-display text-2xl font-bold text-slate-900 sm:text-3xl">
-              Ready to scope your automation workflow?
+            <h2 className="relative font-display text-2xl font-bold text-slate-900 sm:text-3xl md:text-4xl">
+              {P.promo.title}
             </h2>
-            <p className="relative mx-auto mt-3 max-w-lg text-slate-600">
-              Tell us your niche, cadence, and revenue goals—we’ll map a production and publishing plan that fits.
+            <p className="relative mx-auto mt-4 max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg">
+              {P.promo.subtitle}
             </p>
             <motion.a
               href="/#contact"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.98 }}
-              className="relative mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-brand to-brand-bright px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand/25 ring-1 ring-black/5"
+              className="relative mt-8 inline-flex items-center justify-center rounded-full bg-gradient-to-r from-brand to-brand-bright px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand/25"
             >
-              Book a free consultation
-              <HiArrowRight className="h-5 w-5" />
+              {P.promo.cta}
             </motion.a>
-          </motion.div>
-        </div>
+          </div>
+        </motion.div>
+      </section>
+
+      <ServicesFaq />
+
+      {/* Bottom CTAs */}
+      <section className="bg-gradient-to-b from-canvas-bright to-violet-50/30 py-12 sm:py-16">
+        <motion.div
+          className="layout-shell flex flex-col items-center justify-center gap-4 sm:flex-row sm:flex-wrap"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+        >
+          <motion.a
+            variants={staggerItem}
+            href="/#contact"
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.98 }}
+            className="inline-flex min-w-[200px] items-center justify-center rounded-full bg-gradient-to-r from-brand to-brand-bright px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand/25"
+          >
+            Free Consultation
+          </motion.a>
+          <motion.a
+            variants={staggerItem}
+            href="/pricing-plan"
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.98 }}
+            className="inline-flex min-w-[200px] items-center justify-center rounded-full border-2 border-violet-200/80 bg-white px-8 py-3.5 text-base font-semibold text-slate-800 shadow-sm transition hover:border-brand/40"
+          >
+            See Pricing Plan
+          </motion.a>
+          <motion.a
+            variants={staggerItem}
+            href="/"
+            whileHover={{ scale: 1.04, color: '#e6011c' }}
+            whileTap={{ scale: 0.98 }}
+            className="inline-flex min-w-[200px] items-center justify-center text-base font-semibold text-violet transition"
+          >
+            Back to home
+          </motion.a>
+        </motion.div>
       </section>
     </>
   )

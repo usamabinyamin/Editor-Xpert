@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { HiChevronLeft, HiChevronRight, HiStar } from 'react-icons/hi'
-import { easeSmooth } from './MotionSection'
+import { easeSmooth, staggerContainer, staggerItemSoft } from './MotionSection'
 import SectionHeading from './SectionHeading'
 import { AVATARS } from '../data/media'
 
@@ -65,19 +65,27 @@ export default function Testimonials() {
           <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-brand/10 via-violet/10 to-brand/10 blur-2xl" />
 
           <div className="relative overflow-hidden rounded-3xl border border-violet-100/90 bg-white/95 p-8 shadow-xl shadow-violet-300/25 ring-1 ring-violet-200/40 sm:p-12">
-            <div className="mb-6 flex justify-center gap-1">
+            <motion.div
+              className="mb-6 flex justify-center gap-1"
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+            >
               {[1, 2, 3, 4, 5].map((s) => (
-                <HiStar key={s} className="h-6 w-6 text-brand-bright" aria-hidden />
+                <motion.span key={s} variants={staggerItemSoft}>
+                  <HiStar className="h-6 w-6 text-brand-bright" aria-hidden />
+                </motion.span>
               ))}
-            </div>
+            </motion.div>
 
             <AnimatePresence mode="wait">
               <motion.blockquote
                 key={index}
-                initial={{ opacity: 0, x: 24 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -24 }}
-                transition={{ duration: 0.35 }}
+                initial={{ opacity: 0, x: 24, scale: 0.98 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                exit={{ opacity: 0, x: -24, scale: 0.98 }}
+                transition={{ duration: 0.4, ease: easeSmooth }}
                 className="text-center"
               >
                 <p className="font-display text-2xl font-medium leading-snug text-slate-900 sm:text-3xl">
@@ -85,11 +93,14 @@ export default function Testimonials() {
                 </p>
                 <footer className="mt-8">
                   <cite className="not-italic">
-                    <img
+                    <motion.img
                       src={AVATARS[index % AVATARS.length]}
                       alt={`${current.name} avatar`}
                       className="mx-auto mb-3 h-12 w-12 rounded-full border border-slate-200 object-cover shadow-sm"
                       loading="lazy"
+                      initial={{ scale: 0.85, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.35, delay: 0.08, ease: easeSmooth }}
                     />
                     <span className="block text-sm font-semibold text-violet">{current.name}</span>
                     <span className="mt-1 block text-sm text-slate-600">{current.role}</span>

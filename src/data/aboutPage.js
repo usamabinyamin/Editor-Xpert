@@ -27,38 +27,6 @@ export const ABOUT_PAGE = {
       'Editor Xpert has evolved alongside the creator economy—supporting channels that need more than one-off edits: documentary-style storytelling, fast-turn daily cuts, thumbnail systems, SEO-minded titles, and scheduling that respects your niche. We work with creators and brands locally and internationally, combining proven workflows with fresh creative execution so small channels can professionalize and established channels can sustain volume without burning out their team.',
   },
 
-  strategic: {
-    title: 'Our strategic approach to delivering results',
-  },
-
-  /** Wavy roadmap on About — order matches peak / trough alternation */
-  strategicSteps: [
-    {
-      title: 'Content Strategy & Planning',
-      desc:
-        'We identify winning ideas and build a clear direction that aligns with audience demand and growth goals',
-      peak: true,
-    },
-    {
-      title: 'Creative Production',
-      desc:
-        'We turn concepts into high-quality visuals and engaging content that holds attention and builds retention',
-      peak: false,
-    },
-    {
-      title: 'Performance Optimization',
-      desc:
-        'We refine titles, thumbnails, and SEO to improve clicks, watch time, and overall video reach',
-      peak: true,
-    },
-    {
-      title: 'Growth Scaling System',
-      desc:
-        'We use data-driven insights to continuously improve results and scale channels consistently over time',
-      peak: false,
-    },
-  ],
-
   tools: {
     title: 'Creative tools we use',
     subtitle: 'Industry-standard software for edit, motion, color, and design—so deliverables stay broadcast-ready.',
@@ -73,9 +41,17 @@ export const ABOUT_PAGE = {
   },
 
   process: {
+    eyebrow: 'The process',
     title: 'How we make it happen',
     body:
       'Editor Xpert helps brands and creators win on YouTube with a clear, repeatable pipeline: intake, editorial, packaging, and publishing. Whether you are scaling a faceless channel or leveling up a brand presence, we align on goals, lock a production cadence, and execute with quality checks—so results show up in watch time, consistency, and growth—not just tasks completed.',
+  },
+
+  principles: {
+    eyebrow: 'Principles',
+    title: 'How we think about your channel',
+    subtitle:
+      'Mission, vision, strategies, and the outcomes we optimize for—aligned with how modern YouTube teams actually ship.',
   },
 
   pillars: [
@@ -104,4 +80,13 @@ export const ABOUT_PAGE = {
         'Outcomes you can feel: steadier uploads, stronger packaging, clearer positioning, and less operational drag—so energy goes into content strategy and growth.',
     },
   ],
+
+  closing: {
+    quote:
+      'Great channels are not built on one viral cut—they are built on hundreds of small decisions that all point the same direction.',
+    quoteLabel: 'How we think about the work',
+    ctaTitle: 'Tell us what you are shipping next',
+    ctaSubtitle:
+      'Share your upload cadence, formats, and where you need backup—we will map a workflow that fits.',
+  },
 }

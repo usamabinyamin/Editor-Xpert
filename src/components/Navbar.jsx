@@ -58,23 +58,25 @@ export default function Navbar() {
           : 'bg-transparent'
       }`}
     >
-      <nav className="flex layout-shell items-center justify-between gap-4 py-4">
+      <nav className="flex layout-shell items-center justify-between gap-4 py-2.5 sm:py-3">
         <a
           href="/"
           onClick={(e) => {
             e.preventDefault()
             navigateTo('/')
           }}
-          className="group flex shrink-0 items-center"
+          className="group block shrink-0"
         >
-          <img
-            src={BRAND_LOGO_SRC}
-            alt="Editor Xpert"
-            width={250}
-            height={100}
-            className="h-11 w-auto max-w-[min(72vw,20rem)] object-contain object-left sm:h-12 md:h-14 md:max-w-[22rem]"
-            decoding="async"
-          />
+          <span className="relative block h-11 w-[7.5rem] overflow-hidden sm:h-12 sm:w-[8.25rem] md:h-[3.25rem] md:w-[9rem]">
+            <img
+              src={BRAND_LOGO_SRC}
+              alt="Editor Xpert"
+              width={400}
+              height={100}
+              className="absolute left-0 top-0 h-full w-auto max-w-none -translate-x-[32.5%]"
+              decoding="async"
+            />
+          </span>
         </a>
 
         <motion.ul
@@ -96,29 +98,37 @@ export default function Navbar() {
             >
               <a
                 href={item.href}
-                className={linkClass}
+                className={`${linkClass} relative py-1`}
                 onClick={(e) => {
                   e.preventDefault()
                   navigateTo(item.href)
                 }}
               >
                 {item.label}
+                <motion.span
+                  className="absolute -bottom-0.5 left-0 h-0.5 rounded-full bg-gradient-to-r from-brand to-violet"
+                  initial={{ width: 0, opacity: 0 }}
+                  whileHover={{ width: '100%', opacity: 1 }}
+                  transition={{ duration: 0.25, ease: easeSmooth }}
+                />
               </a>
             </motion.li>
           ))}
         </motion.ul>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <a
+          <motion.a
             href="#contact"
             onClick={(e) => {
               e.preventDefault()
               navigateTo('#contact')
             }}
-            className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-brand to-brand-bright px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-brand/30 ring-1 ring-black/5 transition hover:brightness-110"
+            whileHover={{ scale: 1.04, boxShadow: '0 12px 32px -8px rgba(230,1,28,0.4)' }}
+            whileTap={{ scale: 0.97 }}
+            className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-brand to-brand-bright px-4 py-2 text-sm font-semibold text-white shadow-md shadow-brand/30 ring-1 ring-black/5 transition hover:brightness-110"
           >
             Free Consultation
-          </a>
+          </motion.a>
         </div>
 
         <button

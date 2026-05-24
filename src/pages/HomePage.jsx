@@ -26,19 +26,17 @@ export default function HomePage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
       >
-        <ScrollReveal motionScale>
-          <Hero />
-        </ScrollReveal>
-        <ScrollReveal delay={0.06} motionScale>
+        <Hero />
+        <ScrollReveal delay={0.04} direction="left" motionScale>
           <Process />
         </ScrollReveal>
-        <ScrollReveal delay={0.04} motionScale>
+        <ScrollReveal delay={0.04} direction="right" motionScale>
           <Portfolio />
         </ScrollReveal>
         <ScrollReveal delay={0.06} motionScale>
           <Testimonials />
         </ScrollReveal>
-        <ScrollReveal delay={0.06} motionScale>
+        <ScrollReveal delay={0.06} direction="left" motionScale>
           <Contact />
         </ScrollReveal>
       </motion.main>

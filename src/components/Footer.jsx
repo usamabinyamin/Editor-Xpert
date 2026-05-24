@@ -68,20 +68,22 @@ export default function Footer() {
           >
             <a
               href="/"
-              className="inline-flex items-center"
+              className="inline-block"
               onClick={(e) => {
                 e.preventDefault()
                 navigateTo('/')
               }}
             >
-              <img
-                src={BRAND_LOGO_SRC}
-                alt="Editor Xpert"
-                width={250}
-                height={100}
-                className="h-12 w-auto max-w-[min(85vw,22rem)] object-contain object-left sm:h-14 md:h-16"
-                decoding="async"
-              />
+              <span className="relative block h-14 w-[9.5rem] overflow-hidden sm:h-16 sm:w-[10.75rem] md:h-[4.25rem] md:w-[11.5rem]">
+                <img
+                  src={BRAND_LOGO_SRC}
+                  alt="Editor Xpert"
+                  width={400}
+                  height={100}
+                  className="absolute left-0 top-0 h-full w-auto max-w-none -translate-x-[32.5%]"
+                  decoding="async"
+                />
+              </span>
             </a>
             <p className="mt-5 max-w-sm text-[15px] leading-relaxed text-slate-600">
               Premium YouTube automation, editing, and publishing—so you can scale without hiring

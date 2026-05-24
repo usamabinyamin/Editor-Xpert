@@ -1,7 +1,19 @@
 import { motion } from 'framer-motion'
 import { HiCheckCircle } from 'react-icons/hi'
-import SectionHeading from './SectionHeading'
-import { MEDIA } from '../data/media'
+import { PRICING_HERO_IMAGE } from '../data/media'
+import { easeSmooth, scaleIn, staggerContainer, staggerItemSoft } from './MotionSection'
+
+const ease = easeSmooth
+
+const heroStagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.06 } },
+}
+
+const heroItem = {
+  hidden: { opacity: 0, y: 18 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.52, ease } },
+}
 
 const plans = [
   {
@@ -43,41 +55,71 @@ const plans = [
 
 export default function PricingPlan() {
   return (
-    <section
-      id="pricing-plan"
-      className="relative border-t border-violet-200/35 bg-gradient-to-b from-canvas via-violet-50/35 to-canvas-bright py-20 sm:py-24"
-    >
-      <div className="layout-shell">
-        <SectionHeading
-          eyebrow="Pricing Plan"
-          title="Choose the plan that matches your growth stage"
-          subtitle="From focused editing support to full channel management."
+    <>
+      {/* Hero — full-width background */}
+      <section
+        id="pricing-plan"
+        className="relative scroll-mt-28 overflow-hidden border-b border-violet-200/40"
+        aria-labelledby="pricing-plan-heading"
+      >
+        <img
+          src={PRICING_HERO_IMAGE}
+          alt=""
+          aria-hidden
+          className="absolute inset-0 h-full w-full object-cover object-center"
+          loading="eager"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-900/50 to-slate-950/75"
+        />
+        <motion.div
+          aria-hidden
+          className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_40%,rgba(15,23,42,0.15),transparent_65%)]"
         />
 
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45 }}
-          className="mb-8 overflow-hidden rounded-2xl border border-violet-100/90 bg-white/95 shadow-md shadow-violet-200/20"
+          className="relative layout-shell flex min-h-[16rem] flex-col items-center justify-center px-4 py-14 text-center sm:min-h-[18rem] sm:py-16 md:min-h-[20rem] md:py-20"
+          variants={heroStagger}
+          initial="hidden"
+          animate="show"
         >
-          <img
-            src={MEDIA.pricing}
-            alt="YouTube planning and video production strategy session"
-            className="h-44 w-full object-cover sm:h-56"
-            loading="lazy"
-          />
+          <motion.span
+            variants={heroItem}
+            className="text-xs font-bold uppercase tracking-[0.22em] text-brand-bright sm:text-sm"
+          >
+            Pricing Plan
+          </motion.span>
+          <motion.h1
+            variants={heroItem}
+            id="pricing-plan-heading"
+            className="mt-4 max-w-3xl font-display text-3xl font-bold leading-[1.12] tracking-tight text-white sm:text-4xl md:text-5xl"
+          >
+            Choose the plan that matches your growth stage
+          </motion.h1>
+          <motion.p
+            variants={heroItem}
+            className="mt-4 max-w-2xl text-base leading-relaxed text-white/88 sm:text-lg"
+          >
+            From focused editing support to full channel management.
+          </motion.p>
         </motion.div>
+      </section>
 
-        <div className="grid gap-6 lg:grid-cols-3">
-          {plans.map((plan, index) => (
+      <section className="relative border-b border-violet-200/35 bg-gradient-to-b from-canvas via-violet-50/35 to-canvas-bright py-20 sm:py-24">
+        <div className="layout-shell">
+        <motion.div
+          className="grid gap-6 lg:grid-cols-3"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: '-40px' }}
+        >
+          {plans.map((plan) => (
             <motion.article
               key={plan.title}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.45, delay: index * 0.08 }}
-              whileHover={{ y: -6, transition: { duration: 0.22 } }}
+              variants={scaleIn}
+              whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.25 } }}
               className={`rounded-2xl border p-6 shadow-sm sm:p-8 ${
                 plan.featured
                   ? 'border-brand/40 bg-white/95 pt-5 ring-2 ring-brand/20 shadow-md shadow-violet-200/15'
@@ -91,6 +133,12 @@ export default function PricingPlan() {
                     className="pointer-events-none absolute inset-x-8 top-1/2 h-8 -translate-y-1/2 rounded-full bg-gradient-to-r from-brand/25 via-brand-bright/20 to-violet/25 blur-lg"
                   />
                   <span className="relative inline-flex items-center rounded-full bg-gradient-to-r from-brand to-brand-bright px-5 py-2 text-[11px] font-bold uppercase tracking-[0.2em] text-white shadow-[0_8px_28px_-6px_rgba(230,1,28,0.55)] ring-2 ring-white ring-offset-2 ring-offset-white/80">
+                    <motion.span
+                      aria-hidden
+                      className="pointer-events-none absolute inset-0 rounded-full bg-white/20"
+                      animate={{ opacity: [0, 0.35, 0], scale: [1, 1.15, 1] }}
+                      transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+                    />
                     Popular
                   </span>
                 </div>
@@ -101,17 +149,27 @@ export default function PricingPlan() {
                 <p className="mt-2 text-3xl font-bold text-brand">{plan.price}</p>
               </div>
 
-              <ul className="space-y-3">
+              <motion.ul
+                className="space-y-3"
+                variants={staggerContainer}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true }}
+              >
                 {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-2.5 text-sm leading-relaxed text-slate-700">
+                  <motion.li
+                    key={feature}
+                    variants={staggerItemSoft}
+                    className="flex items-start gap-2.5 text-sm leading-relaxed text-slate-700"
+                  >
                     <HiCheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
                     <span>{feature}</span>
-                  </li>
+                  </motion.li>
                 ))}
-              </ul>
+              </motion.ul>
             </motion.article>
           ))}
-        </div>
+        </motion.div>
 
         {/* Limited-time offer CTA — light canvas + violet accents (matches site sections) */}
         <motion.div
@@ -150,8 +208,9 @@ export default function PricingPlan() {
               Grab My 25% Off Now
             </motion.a>
           </div>
-        </motion.div>
-      </div>
-    </section>
+          </motion.div>
+        </div>
+      </section>
+    </>
   )
 }

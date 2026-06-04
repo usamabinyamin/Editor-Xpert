@@ -22,7 +22,8 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          # Vite 8 requires ^20.19.0 || >=22.12.0; lockfile must match npm 10 (bundled with Node 22).
+          node-version: '22.12.0'
           cache: npm
 
       - run: npm ci
@@ -30,7 +31,7 @@ jobs:
       - name: Build for GitHub Pages
         run: npm run build
         env:
-          BASE_PATH: /editor-xpert/
+          BASE_PATH: /Editor-Xpert/
 
       - uses: actions/upload-pages-artifact@v3
         with:

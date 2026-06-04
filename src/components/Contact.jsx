@@ -45,7 +45,7 @@ export default function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.55, ease: easeSmooth }}
-          className="mb-12 scroll-mt-24 overflow-hidden rounded-2xl border border-violet-100/90 bg-white/95 shadow-xl shadow-violet-200/25 sm:mb-14"
+          className="mb-12 scroll-mt-24 rounded-2xl border border-violet-100/90 bg-white/95 shadow-xl shadow-violet-200/25 sm:mb-14"
         >
           <div className="border-b border-violet-100/80 bg-gradient-to-r from-violet-50/80 via-white to-rose-50/40 px-5 py-4 sm:px-8 sm:py-5">
             <h3 className="font-display text-xl font-bold text-slate-900 sm:text-2xl">

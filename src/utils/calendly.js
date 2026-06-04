@@ -26,7 +26,7 @@ function waitForCalendly(timeoutMs = 15000) {
   })
 }
 
-export function loadCalendlyStyles() {
+function loadCalendlyStyles() {
   return new Promise((resolve) => {
     const existing = document.querySelector(`link[href="${STYLE_HREF}"]`)
     if (existing) {
@@ -43,7 +43,7 @@ export function loadCalendlyStyles() {
   })
 }
 
-export function loadCalendlyScript() {
+function loadCalendlyScript() {
   const existing = document.querySelector(`script[src="${SCRIPT_SRC}"]`)
 
   if (!existing) {
@@ -56,41 +56,44 @@ export function loadCalendlyScript() {
   return waitForCalendly()
 }
 
-export function initCalendlyInline(parentElement) {
-  if (!parentElement) return Promise.reject(new Error('Missing Calendly container'))
+function buildPrefill({ name, email, message } = {}) {
+  const prefill = {}
 
-  return loadCalendlyStyles().then(() =>
-    loadCalendlyScript().then((Calendly) => {
-      parentElement.innerHTML = ''
-      Calendly.initInlineWidget({
+  if (name) prefill.name = String(name)
+  if (email) prefill.email = String(email)
+  if (message) prefill.customAnswers = { a1: String(message) }
+
+  return Object.keys(prefill).length ? prefill : undefined
+}
+
+function openCalendlyInNewTab({ name, email } = {}) {
+  const params = new URLSearchParams()
+  if (name) params.set('name', String(name))
+  if (email) params.set('email', String(email))
+  const query = params.toString()
+  window.open(query ? `${CALENDLY_URL}?${query}` : CALENDLY_URL, '_blank', 'noopener,noreferrer')
+}
+
+/** Open Calendly scheduling popup (optionally prefilled from the contact form). */
+export function openCalendlyPopup(e, details = {}) {
+  e?.preventDefault?.()
+
+  const prefill = buildPrefill(details)
+
+  loadCalendlyStyles()
+    .then(() => loadCalendlyScript())
+    .then((Calendly) => {
+      Calendly.initPopupWidget({
         url: CALENDLY_URL,
-        parentElement,
-        resize: true,
+        ...(prefill ? { prefill } : {}),
       })
-      return Calendly
-    }),
-  )
+    })
+    .catch(() => {
+      openCalendlyInNewTab(details)
+    })
 }
 
-export function navigateToBook(e) {
-  e?.preventDefault?.()
-
-  if (window.location.pathname === '/') {
-    const target = document.getElementById('book')
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      window.dispatchEvent(new CustomEvent('editorxpert:open-booking'))
-      return
-    }
-  }
-
-  // Reliable fallback: open Calendly popup from any page.
-  openCalendlyPopup()
-}
-
-export function openCalendlyPopup(e) {
-  e?.preventDefault?.()
-  loadCalendlyScript().then((Calendly) => {
-    Calendly.initPopupWidget({ url: CALENDLY_URL })
-  })
+/** Used by Free Consultation / Book a Call buttons site-wide. */
+export function navigateToBook(e, details) {
+  openCalendlyPopup(e, details)
 }

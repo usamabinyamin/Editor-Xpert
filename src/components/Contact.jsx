@@ -1,28 +1,20 @@
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { HiMail, HiPhone } from 'react-icons/hi'
 import { easeSmooth, staggerContainer, staggerItem } from './MotionSection'
 import SectionHeading from './SectionHeading'
-import CalendlyEmbed from './CalendlyEmbed'
+import { openCalendlyPopup } from '../utils/calendly'
 import { CONTACT } from '../data/site'
 import { MEDIA } from '../data/media'
 
 export default function Contact() {
-  const [status, setStatus] = useState(null)
-
   function handleSubmit(e) {
     e.preventDefault()
-    const form = e.target
-    const data = new FormData(form)
-    const name = data.get('name')
-    const email = data.get('email')
-    const message = data.get('message')
-    const subject = encodeURIComponent(`Editor Xpert inquiry from ${name}`)
-    const body = encodeURIComponent(
-      `Name: ${name}\nEmail: ${email}\n\n${message}\n`,
-    )
-    window.location.href = `mailto:${CONTACT.email}?subject=${subject}&body=${body}`
-    setStatus('opened')
+    const data = new FormData(e.target)
+    openCalendlyPopup(null, {
+      name: data.get('name'),
+      email: data.get('email'),
+      message: data.get('message'),
+    })
   }
 
   return (
@@ -36,34 +28,8 @@ export default function Contact() {
         <SectionHeading
           eyebrow="Contact"
           title="Let’s Grow Your Channel"
-          subtitle="Book a discovery call or send a message—we’ll respond with next steps for your niche and upload cadence."
+          subtitle="Tell us about your niche, posting schedule, and goals—then pick a time that works for you."
         />
-
-        <motion.div
-          id="book"
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.1 }}
-          transition={{ duration: 0.55, ease: easeSmooth }}
-          className="mb-12 scroll-mt-24 rounded-2xl border border-violet-100/90 bg-white/95 shadow-xl shadow-violet-200/25 sm:mb-14"
-        >
-          <div className="border-b border-violet-100/80 bg-gradient-to-r from-violet-50/80 via-white to-rose-50/40 px-5 py-4 sm:px-8 sm:py-5">
-            <h3 className="font-display text-xl font-bold text-slate-900 sm:text-2xl">
-              Book a discovery call
-            </h3>
-            <p className="mt-1 text-sm text-slate-600 sm:text-base">
-              Pick a 30-minute slot that works for you—we’ll discuss goals, workflow, and how we can
-              support your channel.
-            </p>
-          </div>
-          <div className="bg-white px-2 py-2 sm:px-4">
-            <CalendlyEmbed minHeight={700} className="w-full" />
-          </div>
-        </motion.div>
-
-        <p className="mb-8 text-center text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">
-          Or send us a message
-        </p>
 
         <div className="grid gap-12 lg:grid-cols-5 lg:gap-16">
           <motion.div
@@ -176,12 +142,6 @@ export default function Contact() {
                 />
               </label>
             </div>
-
-            {status === 'opened' && (
-              <p className="mt-4 text-sm text-violet">
-                If your mail client did not open, email us directly at {CONTACT.email}
-              </p>
-            )}
 
             <motion.button
               type="submit"

@@ -16,11 +16,7 @@ export default function HomePage() {
     if (!id) return
 
     const timer = window.setTimeout(() => {
-      const target = document.getElementById(id)
-      target?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      if (id === 'book') {
-        window.dispatchEvent(new CustomEvent('editorxpert:open-booking'))
-      }
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }, 350)
 
     return () => window.clearTimeout(timer)

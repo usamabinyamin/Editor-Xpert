@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { HiMenuAlt3, HiX } from 'react-icons/hi'
 import { easeSmooth } from './MotionSection'
-import { BRAND_LOGO_SRC, NAV_ITEMS } from '../data/site'
+import { BRAND_LOGO_SRC, NAV_ITEMS, CALENDLY_URL } from '../data/site'
 import { navigateToBook } from '../utils/calendly'
 
 function navigateTo(href) {
@@ -119,7 +119,7 @@ export default function Navbar() {
 
         <div className="hidden items-center gap-3 lg:flex">
           <motion.a
-            href="#book"
+            href={CALENDLY_URL}
             onClick={navigateToBook}
             whileHover={{ scale: 1.04, boxShadow: '0 12px 32px -8px rgba(230,1,28,0.4)' }}
             whileTap={{ scale: 0.97 }}
@@ -165,7 +165,7 @@ export default function Navbar() {
               ))}
               <li className="pt-2">
                 <a
-                  href="#book"
+                  href={CALENDLY_URL}
                   className="block rounded-full bg-gradient-to-r from-brand to-brand-bright px-4 py-3 text-center text-sm font-semibold text-white"
                   onClick={(e) => {
                     setOpen(false)

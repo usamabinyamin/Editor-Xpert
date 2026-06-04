@@ -1,20 +1,28 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { HiMail, HiPhone } from 'react-icons/hi'
 import { easeSmooth, staggerContainer, staggerItem } from './MotionSection'
 import SectionHeading from './SectionHeading'
-import { openCalendlyPopup } from '../utils/calendly'
+import { buildConsultationMailto, openCalendlyBooking } from '../utils/calendly'
 import { CONTACT } from '../data/site'
 import { MEDIA } from '../data/media'
 
 export default function Contact() {
+  const [submitted, setSubmitted] = useState(false)
+  const [mailtoHref, setMailtoHref] = useState('')
+
   function handleSubmit(e) {
     e.preventDefault()
     const data = new FormData(e.target)
-    openCalendlyPopup(null, {
+    const details = {
       name: data.get('name'),
       email: data.get('email'),
       message: data.get('message'),
-    })
+    }
+
+    setMailtoHref(buildConsultationMailto(details))
+    setSubmitted(true)
+    openCalendlyBooking(details)
   }
 
   return (
@@ -151,6 +159,35 @@ export default function Contact() {
             >
               Let’s Grow Your Channel
             </motion.button>
+
+            {submitted ? (
+              <div
+                role="status"
+                className="mt-4 rounded-xl border border-amber-200/90 bg-amber-50/90 px-4 py-3 text-sm leading-relaxed text-amber-950"
+              >
+                <p className="font-semibold">Scheduler opened in a new tab.</p>
+                <p className="mt-1">
+                  If it says the calendar is unavailable, email us your details instead — we&apos;ll
+                  reply within 24 hours.
+                </p>
+                <a
+                  href={mailtoHref}
+                  className="mt-2 inline-flex font-semibold text-brand underline underline-offset-2 hover:text-brand-dark"
+                >
+                  Send consultation request by email
+                </a>
+              </div>
+            ) : (
+              <p className="mt-3 text-center text-xs text-slate-500 sm:text-sm">
+                Prefer email?{' '}
+                <a
+                  href={`mailto:${CONTACT.email}`}
+                  className="font-medium text-brand hover:text-brand-dark"
+                >
+                  {CONTACT.email}
+                </a>
+              </p>
+            )}
           </motion.form>
         </div>
       </div>

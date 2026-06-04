@@ -3,6 +3,7 @@ import { FaInstagram, FaLinkedin, FaFacebookF } from 'react-icons/fa'
 import { HiArrowRight, HiMail, HiPhone } from 'react-icons/hi'
 import { easeSmooth } from './MotionSection'
 import { BRAND_LOGO_SRC, NAV_ITEMS, SOCIAL, CONTACT } from '../data/site'
+import { navigateToBook } from '../utils/calendly'
 
 const EXTRA_LINKS = [{ href: '#pricing', label: 'Pricing' }]
 
@@ -90,11 +91,8 @@ export default function Footer() {
               an in-house team.
             </p>
             <a
-              href="#contact"
-              onClick={(e) => {
-                e.preventDefault()
-                navigateTo('#contact')
-              }}
+              href="#book"
+              onClick={navigateToBook}
               className="group mt-6 inline-flex items-center gap-2 text-sm font-semibold text-brand transition hover:text-brand-dark"
             >
               Free Consultation

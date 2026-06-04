@@ -13,6 +13,8 @@ export const CONTACT = {
   phoneDisplay: '0301 529 2249',
 }
 
+export const CALENDLY_URL = 'https://calendly.com/usamabinyameen5/30min'
+
 export const NAV_ITEMS = [
   { href: '#home', label: 'Home' },
   { href: '/services', label: 'Services' },

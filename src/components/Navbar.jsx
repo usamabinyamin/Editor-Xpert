@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { HiMenuAlt3, HiX } from 'react-icons/hi'
 import { easeSmooth } from './MotionSection'
 import { BRAND_LOGO_SRC, NAV_ITEMS } from '../data/site'
+import { navigateToBook } from '../utils/calendly'
 
 function navigateTo(href) {
   if (href.startsWith('#')) {
@@ -118,11 +119,8 @@ export default function Navbar() {
 
         <div className="hidden items-center gap-3 lg:flex">
           <motion.a
-            href="#contact"
-            onClick={(e) => {
-              e.preventDefault()
-              navigateTo('#contact')
-            }}
+            href="#book"
+            onClick={navigateToBook}
             whileHover={{ scale: 1.04, boxShadow: '0 12px 32px -8px rgba(230,1,28,0.4)' }}
             whileTap={{ scale: 0.97 }}
             className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-brand to-brand-bright px-4 py-2 text-sm font-semibold text-white shadow-md shadow-brand/30 ring-1 ring-black/5 transition hover:brightness-110"
@@ -167,12 +165,11 @@ export default function Navbar() {
               ))}
               <li className="pt-2">
                 <a
-                  href="#contact"
+                  href="#book"
                   className="block rounded-full bg-gradient-to-r from-brand to-brand-bright px-4 py-3 text-center text-sm font-semibold text-white"
                   onClick={(e) => {
-                    e.preventDefault()
                     setOpen(false)
-                    navigateTo('#contact')
+                    navigateToBook(e)
                   }}
                 >
                   Free Consultation

@@ -3,6 +3,8 @@ import { HiArrowRight, HiPlay } from 'react-icons/hi'
 import { MEDIA } from '../data/media'
 import { Floaty } from './MotionSection'
 
+import { navigateToBook } from '../utils/calendly'
+
 function scrollTo(id) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
@@ -82,11 +84,8 @@ export default function Hero() {
               className="mt-10 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-center lg:justify-start"
             >
               <motion.a
-                href="#contact"
-                onClick={(e) => {
-                  e.preventDefault()
-                  scrollTo('contact')
-                }}
+                href="#book"
+                onClick={navigateToBook}
                 whileHover={{ scale: 1.03, boxShadow: '0 16px 40px -12px rgba(230,1,28,0.45)' }}
                 whileTap={{ scale: 0.97 }}
                 className="group inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-brand to-brand-bright px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand/25 sm:min-w-[200px]"

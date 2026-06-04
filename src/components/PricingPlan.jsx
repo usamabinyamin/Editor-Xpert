@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { HiCheckCircle } from 'react-icons/hi'
 import { PRICING_HERO_IMAGE } from '../data/media'
+import { navigateToBook } from '../utils/calendly'
 import { easeSmooth, scaleIn, staggerContainer, staggerItemSoft } from './MotionSection'
 
 const ease = easeSmooth
@@ -200,7 +201,8 @@ export default function PricingPlan() {
               Boost your brand with the Creative Video Editing Service in Pakistan 2026.
             </p>
             <motion.a
-              href="/#contact"
+              href="/#book"
+              onClick={navigateToBook}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.98 }}
               className="mt-8 inline-flex items-center justify-center rounded-full bg-gradient-to-r from-brand to-brand-bright px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand/25 ring-1 ring-black/5 transition hover:brightness-110"

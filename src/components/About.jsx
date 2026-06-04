@@ -10,6 +10,7 @@ import {
   staggerItemSoft,
   Floaty,
 } from './MotionSection'
+import { navigateToBook } from '../utils/calendly'
 import { MEDIA, SERVICES_HERO_IMAGE } from '../data/media'
 import { ABOUT_PAGE } from '../data/aboutPage'
 
@@ -370,7 +371,8 @@ export default function About() {
               >
                 <motion.a
                   variants={staggerItem}
-                  href="/#contact"
+                  href="/#book"
+                  onClick={navigateToBook}
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                   className="inline-flex min-w-[168px] items-center justify-center rounded-full bg-brand px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-bright"

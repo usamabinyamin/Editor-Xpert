@@ -4,6 +4,7 @@ import { HiArrowRight, HiCheck, HiChevronDown } from 'react-icons/hi'
 import { FaYoutube } from 'react-icons/fa'
 import SectionHeading from './SectionHeading'
 import { easeSmooth, Floaty, staggerContainer, staggerItem, staggerItemSoft } from './MotionSection'
+import { navigateToBook } from '../utils/calendly'
 import { SERVICES_HERO_IMAGE, SERVICES_DASHBOARD_IMAGE } from '../data/media'
 import { SERVICES_PAGE as P } from '../data/servicesPage'
 
@@ -135,7 +136,8 @@ export default function Services() {
 
               <motion.div variants={heroItem} className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <motion.a
-                  href="/#contact"
+                  href="/#book"
+                  onClick={navigateToBook}
                   whileHover={{ scale: 1.04, boxShadow: '0 12px 32px -8px rgba(230,1,28,0.35)' }}
                   whileTap={{ scale: 0.98 }}
                   className="inline-flex items-center justify-center rounded-full bg-brand px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand/20 transition hover:bg-brand-dark"
@@ -360,7 +362,8 @@ export default function Services() {
               </motion.ul>
 
               <motion.a
-                href="/#contact"
+                href="/#book"
+                onClick={navigateToBook}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-brand to-brand-bright px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand/25"
@@ -421,7 +424,8 @@ export default function Services() {
               {P.promo.subtitle}
             </p>
             <motion.a
-              href="/#contact"
+              href="/#book"
+                onClick={navigateToBook}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.98 }}
               className="relative mt-8 inline-flex items-center justify-center rounded-full bg-gradient-to-r from-brand to-brand-bright px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand/25"
@@ -445,7 +449,8 @@ export default function Services() {
         >
           <motion.a
             variants={staggerItem}
-            href="/#contact"
+            href="/#book"
+                onClick={navigateToBook}
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.98 }}
             className="inline-flex min-w-[200px] items-center justify-center rounded-full bg-gradient-to-r from-brand to-brand-bright px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-brand/25"

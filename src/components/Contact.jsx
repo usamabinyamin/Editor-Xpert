@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { HiMail, HiPhone } from 'react-icons/hi'
 import { easeSmooth, staggerContainer, staggerItem } from './MotionSection'
 import SectionHeading from './SectionHeading'
+import CalendlyEmbed from './CalendlyEmbed'
 import { CONTACT } from '../data/site'
 import { MEDIA } from '../data/media'
 
@@ -35,8 +36,34 @@ export default function Contact() {
         <SectionHeading
           eyebrow="Contact"
           title="Let’s Grow Your Channel"
-          subtitle="Tell us about your niche, posting schedule, and goals—we’ll respond with next steps."
+          subtitle="Book a discovery call or send a message—we’ll respond with next steps for your niche and upload cadence."
         />
+
+        <motion.div
+          id="book"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.55, ease: easeSmooth }}
+          className="mb-12 scroll-mt-24 overflow-hidden rounded-2xl border border-violet-100/90 bg-white/95 shadow-xl shadow-violet-200/25 sm:mb-14"
+        >
+          <div className="border-b border-violet-100/80 bg-gradient-to-r from-violet-50/80 via-white to-rose-50/40 px-5 py-4 sm:px-8 sm:py-5">
+            <h3 className="font-display text-xl font-bold text-slate-900 sm:text-2xl">
+              Book a discovery call
+            </h3>
+            <p className="mt-1 text-sm text-slate-600 sm:text-base">
+              Pick a 30-minute slot that works for you—we’ll discuss goals, workflow, and how we can
+              support your channel.
+            </p>
+          </div>
+          <div className="bg-white px-2 py-2 sm:px-4">
+            <CalendlyEmbed minHeight={700} className="w-full" />
+          </div>
+        </motion.div>
+
+        <p className="mb-8 text-center text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">
+          Or send us a message
+        </p>
 
         <div className="grid gap-12 lg:grid-cols-5 lg:gap-16">
           <motion.div

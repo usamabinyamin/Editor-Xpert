@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Navbar from '../components/Navbar'
 import Hero from '../components/Hero'
@@ -10,6 +11,17 @@ import AnimatedBackdrop from '../components/AnimatedBackdrop'
 import { ScrollReveal } from '../components/MotionSection'
 
 export default function HomePage() {
+  useEffect(() => {
+    const id = window.location.hash.replace('#', '')
+    if (!id) return
+
+    const timer = window.setTimeout(() => {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 350)
+
+    return () => window.clearTimeout(timer)
+  }, [])
+
   return (
     <div className="relative flex min-h-0 min-w-0 w-full flex-1 flex-col text-slate-800 antialiased">
       <AnimatedBackdrop />

@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { HiCheck, HiLightningBolt } from 'react-icons/hi'
 import SectionHeading from './SectionHeading'
+import { navigateToBook } from '../utils/calendly'
 
 const features = [
   'Daily video editing',
@@ -12,10 +13,6 @@ const features = [
   'Fast turnaround',
   'Dedicated support',
 ]
-
-function scrollToContact() {
-  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-}
 
 export default function Pricing() {
   return (
@@ -73,7 +70,7 @@ export default function Pricing() {
 
               <motion.button
                 type="button"
-                onClick={scrollToContact}
+                onClick={navigateToBook}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="mt-10 w-full rounded-full bg-gradient-to-r from-brand to-brand-bright py-4 text-center text-base font-bold text-white shadow-lg shadow-brand/25 ring-1 ring-black/5 transition hover:brightness-110"

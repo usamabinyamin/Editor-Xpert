@@ -100,23 +100,26 @@ export function openCalendlyPopup(e, details = {}) {
       })
     })
     .catch(() => {
-      document.getElementById('book')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      window.dispatchEvent(new CustomEvent('editorxpert:open-booking', { detail: details }))
+      scrollToContact()
     })
 }
 
-export function scrollToBook(e) {
+export function scrollToContact(e) {
   e?.preventDefault?.()
-  document.getElementById('book')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  window.dispatchEvent(new CustomEvent('editorxpert:open-booking'))
+  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 
-/** Book / consultation CTAs — popup on this page, or scroll to inline scheduler on home. */
+/** Book / consultation CTAs — scroll to contact form, or popup on other pages. */
 export function navigateToBook(e, details) {
   e?.preventDefault?.()
 
-  if (window.location.pathname === '/' && document.getElementById('book') && !details) {
-    scrollToBook()
+  if (details?.name || details?.email || details?.message) {
+    openCalendlyPopup(e, details)
+    return
+  }
+
+  if (window.location.pathname === '/') {
+    scrollToContact(e)
     return
   }
 

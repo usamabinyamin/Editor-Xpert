@@ -1,9 +1,8 @@
 import { useEffect, useRef } from 'react'
 import { initCalendlyInline } from '../utils/calendly'
 
-export default function CalendlyEmbed({ minHeight = 700, className = '' }) {
+export default function CalendlyEmbed({ minHeight = 700, className = '', details = {} }) {
   const containerRef = useRef(null)
-  const initializedRef = useRef(false)
 
   useEffect(() => {
     const container = containerRef.current
@@ -11,43 +10,16 @@ export default function CalendlyEmbed({ minHeight = 700, className = '' }) {
 
     let cancelled = false
 
-    const mountWidget = (details = {}) => {
-      if (cancelled || !containerRef.current) return
-
-      initCalendlyInline(containerRef.current, details)
-        .then(() => {
-          if (!cancelled) initializedRef.current = true
-        })
-        .catch(() => {})
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((entry) => entry.isIntersecting)) {
-          mountWidget()
-          observer.disconnect()
-        }
-      },
-      { rootMargin: '240px 0px', threshold: 0.01 },
-    )
-
-    observer.observe(container)
-
-    const onOpenBooking = (event) => {
-      mountWidget(event.detail ?? {})
-    }
-    window.addEventListener('editorxpert:open-booking', onOpenBooking)
-
-    if (window.location.hash === '#book') {
-      mountWidget()
-    }
+    initCalendlyInline(container, details)
+      .then(() => {
+        if (!cancelled) container.dataset.loaded = 'true'
+      })
+      .catch(() => {})
 
     return () => {
       cancelled = true
-      observer.disconnect()
-      window.removeEventListener('editorxpert:open-booking', onOpenBooking)
     }
-  }, [])
+  }, [details.name, details.email, details.message])
 
   return (
     <div

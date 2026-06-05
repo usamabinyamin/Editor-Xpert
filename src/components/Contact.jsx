@@ -1,27 +1,35 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { HiMail, HiPhone } from 'react-icons/hi'
 import { easeSmooth, staggerContainer, staggerItem } from './MotionSection'
 import SectionHeading from './SectionHeading'
 import CalendlyEmbed from './CalendlyEmbed'
-import { openCalendlyPopup } from '../utils/calendly'
 import { CONTACT } from '../data/site'
 import { MEDIA } from '../data/media'
 
 export default function Contact() {
-  const [submitted, setSubmitted] = useState(false)
+  const [showScheduler, setShowScheduler] = useState(false)
+  const [bookingDetails, setBookingDetails] = useState({})
+
+  useEffect(() => {
+    if (!showScheduler) return
+
+    const timer = window.setTimeout(() => {
+      document.getElementById('book')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 100)
+
+    return () => window.clearTimeout(timer)
+  }, [showScheduler])
 
   function handleSubmit(e) {
     e.preventDefault()
     const data = new FormData(e.target)
-    const details = {
+    setBookingDetails({
       name: data.get('name'),
       email: data.get('email'),
       message: data.get('message'),
-    }
-
-    setSubmitted(true)
-    openCalendlyPopup(null, details)
+    })
+    setShowScheduler(true)
   }
 
   return (
@@ -35,7 +43,7 @@ export default function Contact() {
         <SectionHeading
           eyebrow="Contact"
           title="Let’s Grow Your Channel"
-          subtitle="Tell us about your channel, then pick a consultation time below — everything stays on this page."
+          subtitle="Tell us about your channel and goals — then pick a consultation time."
         />
 
         <div className="grid gap-12 lg:grid-cols-5 lg:gap-16">
@@ -159,48 +167,43 @@ export default function Contact() {
               Let’s Grow Your Channel
             </motion.button>
 
-            {submitted ? (
-              <div
-                role="status"
-                className="mt-4 rounded-xl border border-brand/20 bg-brand/5 px-4 py-3 text-sm leading-relaxed text-slate-800"
+            <p className="mt-3 text-center text-xs text-slate-500 sm:text-sm">
+              Or reach us directly:{' '}
+              <a
+                href={`mailto:${CONTACT.email}`}
+                className="font-medium text-brand hover:text-brand-dark"
               >
-                <p className="font-semibold">Choose a time in the scheduler popup.</p>
-                <p className="mt-1">
-                  Your name and email are prefilled. You can also scroll down to the calendar on this
-                  page.
-                </p>
-              </div>
-            ) : (
-              <p className="mt-3 text-center text-xs text-slate-500 sm:text-sm">
-                Or reach us directly:{' '}
-                <a
-                  href={`mailto:${CONTACT.email}`}
-                  className="font-medium text-brand hover:text-brand-dark"
-                >
-                  {CONTACT.email}
-                </a>
-                {' · '}
-                <a
-                  href={`tel:${CONTACT.phone}`}
-                  className="font-medium text-brand hover:text-brand-dark"
-                >
-                  {CONTACT.phoneDisplay}
-                </a>
-              </p>
-            )}
+                {CONTACT.email}
+              </a>
+              {' · '}
+              <a
+                href={`tel:${CONTACT.phone}`}
+                className="font-medium text-brand hover:text-brand-dark"
+              >
+                {CONTACT.phoneDisplay}
+              </a>
+            </p>
           </motion.form>
         </div>
 
-        <div id="book" className="mt-14 scroll-mt-24 sm:mt-16">
-          <SectionHeading
-            eyebrow="Schedule"
-            title="Pick your consultation time"
-            subtitle="Select a slot that works for you — no need to leave this page."
-          />
-          <div className="overflow-hidden rounded-2xl border border-violet-100/90 bg-white/95 shadow-xl shadow-violet-200/25">
-            <CalendlyEmbed minHeight={720} className="w-full" />
-          </div>
-        </div>
+        {showScheduler ? (
+          <motion.div
+            id="book"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, ease: easeSmooth }}
+            className="mt-14 scroll-mt-24 sm:mt-16"
+          >
+            <SectionHeading
+              eyebrow="Schedule"
+              title="Pick your consultation time"
+              subtitle="Select a slot that works for you — your details are already filled in."
+            />
+            <div className="overflow-hidden rounded-2xl border border-violet-100/90 bg-white/95 shadow-xl shadow-violet-200/25">
+              <CalendlyEmbed minHeight={720} className="w-full" details={bookingDetails} />
+            </div>
+          </motion.div>
+        ) : null}
       </div>
     </section>
   )

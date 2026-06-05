@@ -3,15 +3,13 @@ import { motion } from 'framer-motion'
 import { HiMail, HiPhone } from 'react-icons/hi'
 import { easeSmooth, staggerContainer, staggerItem } from './MotionSection'
 import SectionHeading from './SectionHeading'
-import { buildConsultationMailto, buildWhatsAppUrl, openConsultationEmail } from '../utils/calendly'
+import CalendlyEmbed from './CalendlyEmbed'
+import { openCalendlyPopup } from '../utils/calendly'
 import { CONTACT } from '../data/site'
 import { MEDIA } from '../data/media'
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false)
-  const [mailtoHref, setMailtoHref] = useState('')
-
-  const [whatsappHref, setWhatsappHref] = useState('')
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -22,10 +20,8 @@ export default function Contact() {
       message: data.get('message'),
     }
 
-    setMailtoHref(buildConsultationMailto(details))
-    setWhatsappHref(buildWhatsAppUrl(details))
     setSubmitted(true)
-    openConsultationEmail(details)
+    openCalendlyPopup(null, details)
   }
 
   return (
@@ -39,7 +35,7 @@ export default function Contact() {
         <SectionHeading
           eyebrow="Contact"
           title="Let’s Grow Your Channel"
-          subtitle="Send your details and we’ll reply within 24 hours to schedule your free consultation call."
+          subtitle="Tell us about your channel, then pick a consultation time below — everything stays on this page."
         />
 
         <div className="grid gap-12 lg:grid-cols-5 lg:gap-16">
@@ -166,29 +162,13 @@ export default function Contact() {
             {submitted ? (
               <div
                 role="status"
-                className="mt-4 rounded-xl border border-emerald-200/90 bg-emerald-50/90 px-4 py-3 text-sm leading-relaxed text-emerald-950"
+                className="mt-4 rounded-xl border border-brand/20 bg-brand/5 px-4 py-3 text-sm leading-relaxed text-slate-800"
               >
-                <p className="font-semibold">Your email app should open with your message ready to send.</p>
+                <p className="font-semibold">Choose a time in the scheduler popup.</p>
                 <p className="mt-1">
-                  Click send in your email app to complete the request. We&apos;ll reply within 24 hours
-                  to confirm a call time.
+                  Your name and email are prefilled. You can also scroll down to the calendar on this
+                  page.
                 </p>
-                <div className="mt-3 flex flex-wrap gap-3">
-                  <a
-                    href={mailtoHref}
-                    className="inline-flex font-semibold text-brand underline underline-offset-2 hover:text-brand-dark"
-                  >
-                    Open email again
-                  </a>
-                  <a
-                    href={whatsappHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex font-semibold text-brand underline underline-offset-2 hover:text-brand-dark"
-                  >
-                    Message us on WhatsApp
-                  </a>
-                </div>
               </div>
             ) : (
               <p className="mt-3 text-center text-xs text-slate-500 sm:text-sm">
@@ -209,6 +189,17 @@ export default function Contact() {
               </p>
             )}
           </motion.form>
+        </div>
+
+        <div id="book" className="mt-14 scroll-mt-24 sm:mt-16">
+          <SectionHeading
+            eyebrow="Schedule"
+            title="Pick your consultation time"
+            subtitle="Select a slot that works for you — no need to leave this page."
+          />
+          <div className="overflow-hidden rounded-2xl border border-violet-100/90 bg-white/95 shadow-xl shadow-violet-200/25">
+            <CalendlyEmbed minHeight={720} className="w-full" />
+          </div>
         </div>
       </div>
     </section>

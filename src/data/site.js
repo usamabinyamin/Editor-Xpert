@@ -15,7 +15,7 @@ export const CONTACT = {
 
 /** Re-enable once Google Calendar / Meet is connected in Calendly. */
 export const CALENDLY_URL = 'https://calendly.com/usamabinyameen5/30min'
-export const BOOKING_HREF = '#contact'
+export const BOOKING_HREF = '/#book'
 
 export const NAV_ITEMS = [
   { href: '#home', label: 'Home' },

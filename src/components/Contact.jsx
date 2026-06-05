@@ -3,13 +3,15 @@ import { motion } from 'framer-motion'
 import { HiMail, HiPhone } from 'react-icons/hi'
 import { easeSmooth, staggerContainer, staggerItem } from './MotionSection'
 import SectionHeading from './SectionHeading'
-import { buildConsultationMailto, openCalendlyBooking } from '../utils/calendly'
+import { buildConsultationMailto, buildWhatsAppUrl, openConsultationEmail } from '../utils/calendly'
 import { CONTACT } from '../data/site'
 import { MEDIA } from '../data/media'
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false)
   const [mailtoHref, setMailtoHref] = useState('')
+
+  const [whatsappHref, setWhatsappHref] = useState('')
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -21,8 +23,9 @@ export default function Contact() {
     }
 
     setMailtoHref(buildConsultationMailto(details))
+    setWhatsappHref(buildWhatsAppUrl(details))
     setSubmitted(true)
-    openCalendlyBooking(details)
+    openConsultationEmail(details)
   }
 
   return (
@@ -36,7 +39,7 @@ export default function Contact() {
         <SectionHeading
           eyebrow="Contact"
           title="Let’s Grow Your Channel"
-          subtitle="Tell us about your niche, posting schedule, and goals—then pick a time that works for you."
+          subtitle="Send your details and we’ll reply within 24 hours to schedule your free consultation call."
         />
 
         <div className="grid gap-12 lg:grid-cols-5 lg:gap-16">
@@ -163,28 +166,45 @@ export default function Contact() {
             {submitted ? (
               <div
                 role="status"
-                className="mt-4 rounded-xl border border-amber-200/90 bg-amber-50/90 px-4 py-3 text-sm leading-relaxed text-amber-950"
+                className="mt-4 rounded-xl border border-emerald-200/90 bg-emerald-50/90 px-4 py-3 text-sm leading-relaxed text-emerald-950"
               >
-                <p className="font-semibold">Scheduler opened in a new tab.</p>
+                <p className="font-semibold">Your email app should open with your message ready to send.</p>
                 <p className="mt-1">
-                  If it says the calendar is unavailable, email us your details instead — we&apos;ll
-                  reply within 24 hours.
+                  Click send in your email app to complete the request. We&apos;ll reply within 24 hours
+                  to confirm a call time.
                 </p>
-                <a
-                  href={mailtoHref}
-                  className="mt-2 inline-flex font-semibold text-brand underline underline-offset-2 hover:text-brand-dark"
-                >
-                  Send consultation request by email
-                </a>
+                <div className="mt-3 flex flex-wrap gap-3">
+                  <a
+                    href={mailtoHref}
+                    className="inline-flex font-semibold text-brand underline underline-offset-2 hover:text-brand-dark"
+                  >
+                    Open email again
+                  </a>
+                  <a
+                    href={whatsappHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex font-semibold text-brand underline underline-offset-2 hover:text-brand-dark"
+                  >
+                    Message us on WhatsApp
+                  </a>
+                </div>
               </div>
             ) : (
               <p className="mt-3 text-center text-xs text-slate-500 sm:text-sm">
-                Prefer email?{' '}
+                Or reach us directly:{' '}
                 <a
                   href={`mailto:${CONTACT.email}`}
                   className="font-medium text-brand hover:text-brand-dark"
                 >
                   {CONTACT.email}
+                </a>
+                {' · '}
+                <a
+                  href={`tel:${CONTACT.phone}`}
+                  className="font-medium text-brand hover:text-brand-dark"
+                >
+                  {CONTACT.phoneDisplay}
                 </a>
               </p>
             )}

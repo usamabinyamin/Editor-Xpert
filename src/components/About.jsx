@@ -11,7 +11,7 @@ import {
   Floaty,
 } from './MotionSection'
 import { navigateToBook } from '../utils/calendly'
-import { CALENDLY_URL } from '../data/site'
+import { BOOKING_HREF } from '../data/site'
 import { MEDIA, SERVICES_HERO_IMAGE } from '../data/media'
 import { ABOUT_PAGE } from '../data/aboutPage'
 
@@ -372,7 +372,7 @@ export default function About() {
               >
                 <motion.a
                   variants={staggerItem}
-                  href={CALENDLY_URL}
+                  href={BOOKING_HREF}
                   onClick={navigateToBook}
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}

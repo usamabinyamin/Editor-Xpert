@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import { HiCheckCircle } from 'react-icons/hi'
 import { PRICING_HERO_IMAGE } from '../data/media'
 import { navigateToBook } from '../utils/calendly'
-import { CALENDLY_URL } from '../data/site'
+import { BOOKING_HREF } from '../data/site'
 import { easeSmooth, scaleIn, staggerContainer, staggerItemSoft } from './MotionSection'
 
 const ease = easeSmooth
@@ -202,7 +202,7 @@ export default function PricingPlan() {
               Boost your brand with the Creative Video Editing Service in Pakistan 2026.
             </p>
             <motion.a
-              href={CALENDLY_URL}
+              href={BOOKING_HREF}
               onClick={navigateToBook}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.98 }}

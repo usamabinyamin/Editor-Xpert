@@ -1,15 +1,6 @@
-import { CALENDLY_URL, CONTACT } from '../data/site'
+import { CONTACT } from '../data/site'
 
-/** Build scheduling URL with optional invitee prefill (name, email, first custom answer). */
-export function buildCalendlyUrl({ name, email, message } = {}) {
-  const url = new URL(CALENDLY_URL)
-  if (name) url.searchParams.set('name', String(name))
-  if (email) url.searchParams.set('email', String(email))
-  if (message) url.searchParams.set('a1', String(message))
-  return url.toString()
-}
-
-/** Email fallback when Calendly scheduling is unavailable. */
+/** Email consultation request with optional form details. */
 export function buildConsultationMailto({ name, email, message } = {}) {
   const subject = encodeURIComponent(
     `Consultation request${name ? ` — ${name}` : ''}`,
@@ -20,18 +11,38 @@ export function buildConsultationMailto({ name, email, message } = {}) {
   return `mailto:${CONTACT.email}?subject=${subject}&body=${body}`
 }
 
-/** Open the full Calendly page in a new tab (more reliable than the embed popup). */
-export function openCalendlyBooking(details = {}) {
-  window.open(buildCalendlyUrl(details), '_blank', 'noopener,noreferrer')
+export function buildWhatsAppUrl({ name, message } = {}) {
+  const text = [
+    'Hi Editor Xpert, I would like to book a consultation.',
+    name ? `Name: ${name}` : '',
+    message || '',
+  ]
+    .filter(Boolean)
+    .join('\n')
+  return `https://wa.me/${CONTACT.phone.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`
 }
 
-/** Used by Free Consultation / Book a Call buttons site-wide. */
+export function openConsultationEmail(details = {}) {
+  window.location.href = buildConsultationMailto(details)
+}
+
+export function scrollToContact(e) {
+  e?.preventDefault?.()
+  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
+/** Book / consultation CTAs — contact form or prefilled email. */
 export function navigateToBook(e, details) {
   e?.preventDefault?.()
-  openCalendlyBooking(details)
+
+  if (details?.name || details?.email || details?.message) {
+    openConsultationEmail(details)
+    return
+  }
+
+  scrollToContact()
 }
 
-/** Contact form and legacy callers — opens scheduler in a new tab. */
 export function openCalendlyPopup(e, details = {}) {
   navigateToBook(e, details)
 }

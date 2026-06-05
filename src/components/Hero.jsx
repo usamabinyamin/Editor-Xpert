@@ -1,7 +1,7 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { HiArrowRight, HiPlay } from 'react-icons/hi'
 import { MEDIA } from '../data/media'
-import { CALENDLY_URL } from '../data/site'
+import { BOOKING_HREF } from '../data/site'
 import { Floaty } from './MotionSection'
 
 import { navigateToBook } from '../utils/calendly'
@@ -85,7 +85,7 @@ export default function Hero() {
               className="mt-10 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-center lg:justify-start"
             >
               <motion.a
-                href={CALENDLY_URL}
+                href={BOOKING_HREF}
                 onClick={navigateToBook}
                 whileHover={{ scale: 1.03, boxShadow: '0 16px 40px -12px rgba(230,1,28,0.45)' }}
                 whileTap={{ scale: 0.97 }}

@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import { FaInstagram, FaLinkedin, FaFacebookF } from 'react-icons/fa'
 import { HiArrowRight, HiMail, HiPhone } from 'react-icons/hi'
 import { easeSmooth } from './MotionSection'
-import { BRAND_LOGO_SRC, NAV_ITEMS, SOCIAL, CONTACT, CALENDLY_URL } from '../data/site'
+import { BRAND_LOGO_SRC, NAV_ITEMS, SOCIAL, CONTACT, BOOKING_HREF } from '../data/site'
 import { navigateToBook } from '../utils/calendly'
 
 const EXTRA_LINKS = [{ href: '#pricing', label: 'Pricing' }]
@@ -91,7 +91,7 @@ export default function Footer() {
               an in-house team.
             </p>
             <a
-              href={CALENDLY_URL}
+              href={BOOKING_HREF}
               onClick={navigateToBook}
               className="group mt-6 inline-flex items-center gap-2 text-sm font-semibold text-brand transition hover:text-brand-dark"
             >

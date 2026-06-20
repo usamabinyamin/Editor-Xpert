@@ -34,6 +34,92 @@ const imageZoom = {
   transition: { duration: 0.45, ease: easeSmooth },
 }
 
+function getInitials(name) {
+  return name
+    .split(' ')
+    .map((part) => part[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase()
+}
+
+function TeamRow({ people, size = 'lead', showAccentBar = false }) {
+  return (
+    <div className="relative">
+      {showAccentBar && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-[6.75rem] z-0 hidden h-3 rounded-full bg-gradient-to-r from-brand/90 via-violet to-brand/90 shadow-md shadow-brand/20 sm:top-[7.25rem] sm:h-4 lg:block"
+        />
+      )}
+
+      <motion.div
+        className="relative z-10 grid gap-12 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8 xl:gap-12"
+        variants={staggerContainer}
+      >
+        {people.map((person) => (
+          <motion.div key={person.name} variants={staggerItemSoft} className="flex flex-col items-center">
+            <TeamPerson person={person} size={size} />
+          </motion.div>
+        ))}
+      </motion.div>
+    </div>
+  )
+}
+
+function TeamPortrait({ person, size = 'lead' }) {
+  const isLead = size === 'lead'
+  const frameClass = isLead
+    ? 'h-52 w-52 sm:h-56 sm:w-56'
+    : 'h-40 w-40 sm:h-44 sm:w-44'
+
+  return (
+    <div className={`relative overflow-hidden rounded-xl border-4 border-white bg-white shadow-lg shadow-violet-200/30 ${frameClass}`}>
+      {person.image ? (
+        <img
+          src={person.image}
+          alt={person.name}
+          className={`h-full w-full object-cover ${person.imagePosition ?? 'object-center'}`}
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <div
+          className={`flex h-full w-full items-center justify-center bg-gradient-to-br from-violet/25 via-brand/15 to-fuchsia-200/30 font-display font-bold text-brand ${
+            isLead ? 'text-4xl sm:text-5xl' : 'text-3xl'
+          }`}
+          aria-hidden
+        >
+          {getInitials(person.name)}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function TeamPerson({ person, size = 'lead' }) {
+  const isLead = size === 'lead'
+
+  return (
+    <motion.div
+      variants={staggerItemSoft}
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.3, ease: easeSmooth }}
+      className="flex flex-col items-center text-center"
+    >
+      <TeamPortrait person={person} size={size} />
+      <h3
+        className={`mt-4 font-display font-bold text-slate-900 ${isLead ? 'text-lg sm:text-xl' : 'text-base sm:text-lg'}`}
+      >
+        {person.name}
+      </h3>
+      <p className={`mt-1 font-medium text-violet ${isLead ? 'text-sm sm:text-base' : 'text-sm'}`}>
+        {person.role}
+      </p>
+    </motion.div>
+  )
+}
+
 export default function About() {
   const p = ABOUT_PAGE
 
@@ -85,70 +171,30 @@ export default function About() {
         </motion.div>
       </motion.section>
 
-      {/* Founder — text left, portrait right */}
+      {/* Meet our team — two equal rows of three */}
       <motion.section
         className="border-t border-violet-200/30 bg-gradient-to-b from-canvas-bright via-white/70 to-rose-50/25 py-20 sm:py-24"
         {...sectionMotion('left')}
       >
         <motion.div className="layout-shell">
           <motion.div
-            className="grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-12"
             variants={staggerContainer}
             initial="hidden"
             whileInView="show"
             viewport={viewport}
           >
-            <motion.div
-              variants={staggerContainer}
-              className="flex h-full min-h-0 flex-col justify-center lg:py-4"
-            >
-              <motion.span
-                variants={staggerItemSoft}
-                className="text-sm font-semibold uppercase tracking-[0.2em] text-violet"
-              >
-                {p.founder.roleLabel}
-              </motion.span>
-              <motion.h2
-                variants={staggerItemSoft}
-                className="mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl"
-              >
-                {p.founder.heading}
-              </motion.h2>
-              <motion.p
-                variants={staggerItemSoft}
-                className="mt-4 font-display text-2xl font-bold text-brand sm:text-3xl"
-              >
-                {p.founder.name}
-              </motion.p>
-              <motion.div variants={staggerContainer} className="mt-8 space-y-6">
-                {p.founder.bio.map((paragraph, i) => (
-                  <motion.p
-                    key={i}
-                    variants={staggerItemSoft}
-                    className="text-lg leading-relaxed text-slate-600"
-                  >
-                    {paragraph}
-                  </motion.p>
-                ))}
-              </motion.div>
+            <motion.div variants={staggerItemSoft} className="max-w-2xl">
+              <h2 className="font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
+                {p.team.title}
+              </h2>
+              <div className="mt-4 h-1.5 w-20 rounded-full bg-gradient-to-r from-brand to-violet" />
+              <p className="mt-5 text-lg leading-relaxed text-slate-600">{p.team.subtitle}</p>
             </motion.div>
 
-            <motion.div variants={scaleIn} className="flex w-full justify-center lg:justify-end">
-              <motion.div
-                whileHover={{ y: -6, boxShadow: '0 24px 48px -20px rgba(139,92,246,0.35)' }}
-                transition={{ duration: 0.35, ease: easeSmooth }}
-                className="relative aspect-[3/4] w-full max-w-[320px] overflow-hidden rounded-2xl border border-violet-200/50 bg-gradient-to-br from-violet-100/40 to-fuchsia-50/50 shadow-md shadow-violet-200/25 sm:max-w-[380px] lg:max-w-[420px]"
-              >
-                <motion.img
-                  {...imageZoom}
-                  src={MEDIA.founder}
-                  alt="Muhammad Usama, Founder and CEO of Editor Xpert"
-                  className="h-full w-full object-cover object-[center_22%]"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </motion.div>
-            </motion.div>
+            <div className="mt-14 space-y-12 sm:mt-16 sm:space-y-14">
+              <TeamRow people={p.team.leads} size="lead" showAccentBar />
+              <TeamRow people={p.team.members} size="lead" showAccentBar />
+            </div>
           </motion.div>
         </motion.div>
       </motion.section>

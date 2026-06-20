@@ -4,13 +4,19 @@
  */
 
 export const ABOUT_PAGE = {
-  founder: {
-    roleLabel: 'Founder & CEO',
-    heading: 'Meet Our Founder',
-    name: 'Muhammad Usama',
-    bio: [
-      'Muhammad Usama is the Founder of Editor Xpert. Driven by a passion for visual storytelling and scalable channel operations, he built the studio around one idea: creators should spend time on strategy—not endless edits and upload logistics.',
-      'What began as focused video editing work has grown into a full production partner for faceless channels, brands, and educators: daily editing, thumbnails, publishing, and systems that keep uploads on schedule. Under his direction, Editor Xpert combines editorial craft with repeatable workflows so serious channels can scale without hiring an entire in-house team.',
+  team: {
+    title: 'Meet our team',
+    subtitle:
+      'The people behind your channel growth, editing, and publishing—working together so you can scale with confidence.',
+    leads: [
+      { name: 'Muhammad Usama', role: 'Founder', image: '/founder-muhammad-usama.png', imagePosition: 'object-[center_22%]' },
+      { name: 'Muhammad Talha', role: 'Co Founder', image: '/team-muhammad-talha.png' },
+      { name: 'Muhammad Hammad', role: 'Senior Channel Growth Manager', image: '/team-muhammad-hammad.png' },
+    ],
+    members: [
+      { name: 'Muhammad Sohaib', role: 'Senior Video Editor', image: '/team-muhammad-sohaib.png' },
+      { name: 'Ahmad Tufail', role: 'Senior Channel Growth Manager', image: '/team-ahmad-tufail.png' },
+      { name: 'Adam Carter', role: 'Channel Optimization Specialist', image: '/team-adam-carter.png' },
     ],
   },
 
